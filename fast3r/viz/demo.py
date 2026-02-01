@@ -45,7 +45,8 @@ def run_viser_server(pipe_conn, output, min_conf_thr_percentile, global_conf_thr
             global_conf_thr_value_to_drop_view=global_conf_thr_value_to_drop_view,
             point_size=point_size,
         )
-        share_url = server.request_share_url()
+        # share_url = server.request_share_url()
+        share_url = "http://localhost:8020"
         pipe_conn.send({"share_url": share_url})
         pipe_conn.close()
         while True:
@@ -965,7 +966,7 @@ def create_demo(checkpoint_dir, examples_dir, output_dir, device: torch.device, 
         gr.HTML(header_html)
         with gr.Row():
             with gr.Column(scale=2):
-                gallery = gr.Gallery(label="Upload Images of a Scene", columns=6, height="150px", show_download_button=True)
+                gallery = gr.Gallery(label="Upload Images of a Scene", columns=6, height="150px")
                 video_input.render()
             with gr.Column(scale=1):
                 # Add resolution radio button
@@ -1124,8 +1125,12 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     demo = create_demo(args.checkpoint_dir, args.examples_dir, args.output_dir, device=device, 
                        is_lightning_checkpoint=args.is_lightning_checkpoint)
-    demo.queue(default_concurrency_limit=2)
-    demo.launch(share=True)
+    demo.queue(default_concurrency_limit=1)
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=7860,
+        share=True
+    )
 
 if __name__ == "__main__":
     main()

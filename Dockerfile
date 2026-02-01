@@ -1,4 +1,4 @@
-FROM pytorch/pytorch:2.4.0-cuda12.4-cudnn9-devel
+FROM docker.io/pytorch/pytorch:2.4.0-cuda12.4-cudnn9-devel
 
 ENV GRADIO_SERVER_NAME 0.0.0.0
 ARG DEBIAN_FRONTEND=noninteractive
@@ -15,14 +15,13 @@ ARG TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6+PTX"
 RUN apt-get update -y && apt-get install -y git wget
 RUN apt install -y libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6
 
-WORKDIR /
-RUN git clone --depth 1 https://github.com/facebookresearch/fast3r
-
 WORKDIR /fast3r
+COPY . /fast3r
 RUN pip install -r requirements.txt
 RUN pip install -e .
 
 ENV CUDA_VISIBLE_DEVICES=0
+ENV PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512,garbage_collection_threshold:0.8
 
 EXPOSE 7860
 

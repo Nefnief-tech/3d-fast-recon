@@ -265,7 +265,7 @@ def bind_update(widget, update_func):
 
 # ----------------- Main Visualization Function -----------------
 def start_visualization(output, min_conf_thr_percentile=10, global_conf_thr_value_to_drop_view=1.5, port=8020, point_size=0.0004):
-    server = viser.ViserServer(host='127.0.0.1', port=port)
+    server = viser.ViserServer(host='0.0.0.0', port=port)
     server.gui.set_panel_label("Show Controls")
     server.gui.configure_theme(control_layout="floating", control_width="medium", show_logo=False)
 
